@@ -9,6 +9,8 @@ if(window.isBanter){
   };
 
   function loadSettings() {
+    const randomLocationX = Math.round((Math.random() * 2 - 1) * 10) / 10;
+    const randomLocationZ = Math.round((Math.random() * 3 - 2) * 10) / 10;
     console.log("SCRIPT setSceneSettings Loading...");
     // SetSettings - Set settings for the current space like spawn position, portals, guest access etc.
     const settings = new BS.SceneSettings();
@@ -26,10 +28,10 @@ if(window.isBanter){
     settings.RefreshRate = 72;
     settings.ClippingPlane = new BS.Vector2(0.05, 500);
     settings.SpawnPoint = new BS.Vector4(0, 0.1, 0, 90);
-    chatscene.TeleportTo({x: 0, y: 0.2, z: 0}, 0, true);
+    chatscene.TeleportTo({x: randomLocationX, y: 0.2, z: randomLocationZ}, 0, true);
     chatscene.SetSettings(settings);
     console.log("SCRIPT finish setting settings for scene");
-    setTimeout(() => { chatscene.TeleportTo({x: 0, y: 0.2, z: 0}, 0, true); chatscene.SetSettings(settings); }, 2000);
+    setTimeout(() => { chatscene.TeleportTo({x: randomLocationX, y: 0.2, z: randomLocationZ}, 0, true); chatscene.SetSettings(settings); }, 2000);
   };
 
   async function infotextStuff() {
