@@ -24,14 +24,14 @@ if(window.isBanter){
     // settings.EnableAvatars = true;
     settings.MaxOccupancy = 30;
     settings.RefreshRate = 72;
-    settings.ClippingPlane = new BS.Vector2(0.05, 400);
+    settings.ClippingPlane = new BS.Vector2(0.05, 500);
     settings.SpawnPoint = new BS.Vector4(0, 0.1, 0, 90);
     chatscene.TeleportTo({x: 0, y: 0.2, z: 0}, 0, true);
     chatscene.SetSettings(settings);
     console.log("SCRIPT finish setting settings for scene");
     setTimeout(() => { chatscene.TeleportTo({x: 0, y: 0.2, z: 0}, 0, true); chatscene.SetSettings(settings); }, 2000);
   };
-  
+
   async function infotextStuff() {
     const textObject = new BS.GameObject("InfoText");
     const infoText = await textObject.AddComponent(new BS.BanterText("Messages will appear on the browser", new BS.Vector4(1, 1, 1, 1)));
