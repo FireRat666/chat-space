@@ -26,9 +26,10 @@ if(window.isBanter){
     settings.RefreshRate = 72;
     settings.ClippingPlane = new BS.Vector2(0.05, 400);
     settings.SpawnPoint = new BS.Vector4(0, 0.1, 0, 90);
+    chatscene.TeleportTo({x: 0, y: 0.2, z: 0}, 0, true);
     chatscene.SetSettings(settings);
     console.log("SCRIPT finish setting settings for scene");
-    setTimeout(() => { chatscene.SetSettings(settings); }, 2000);
+    setTimeout(() => { chatscene.TeleportTo({x: 0, y: 0.2, z: 0}, 0, true); chatscene.SetSettings(settings); }, 2000);
   };
 
   somerandomStartCrap();
