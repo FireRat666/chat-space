@@ -24,7 +24,7 @@ if(window.isBanter){
     // settings.EnableAvatars = true;
     settings.MaxOccupancy = 30;
     settings.RefreshRate = 72;
-    settings.ClippingPlane = new BS.Vector2(0.05, 800);
+    settings.ClippingPlane = new BS.Vector2(0.05, 400);
     settings.SpawnPoint = new BS.Vector4(0, 0.1, 0, 90);
     chatscene.SetSettings(settings);
     console.log("SCRIPT finish setting settings for scene");
@@ -32,5 +32,5 @@ if(window.isBanter){
   };
 
   somerandomStartCrap();
-  
+
 };
