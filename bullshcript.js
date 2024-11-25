@@ -5,7 +5,7 @@ if(window.isBanter){
   async function somerandomStartCrap() {
     const waitingForUnity = async () => { while (!chatscene.unityLoaded) { await new Promise(resolve => setTimeout(resolve, 500)); } };
     await waitingForUnity(); console.log("SCRIPT: Unity-Loaded");
-    setTimeout(() => { loadSettings(); infotextStuff(); }, 1000);
+    setTimeout(() => { loadSettings(); infotextStuff(); landingPlatform(); }, 1000);
   };
 
   function loadSettings() {
@@ -40,6 +40,17 @@ if(window.isBanter){
     const textTransform = await textObject.AddComponent(new BS.Transform());
     textTransform.position = new BS.Vector3(8, 1, 5);
     // textTransform.localPosition = new BS.Vector3(8.1, -1, 0); infoText.text = "label";
+  }
+
+  async function landingPlatform() {
+    const platformObject = new BS.GameObject("landingPlane");
+    await platformObject.AddComponent(new BS.BanterGeometry(BS.GeometryType.BoxGeometry));
+    await platformObject.AddComponent(new BS.BoxCollider(false));
+    await platformObject.AddComponent(new BS.BanterMaterial("Unlit/Diffuse", "",  new BS.Vector4(0,0,0,1)));
+    const plane20transform = await platformObject.AddComponent(new BS.Transform());
+
+    plane20transform.localPosition = new BS.Vector3(0,-0.2,0);
+    plane20transform.localScale = new BS.Vector3(10,0.05,10);
   }
 
   somerandomStartCrap();
