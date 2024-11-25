@@ -58,7 +58,7 @@
       }
     </script>
 </head>
-	<body id="body">
+	<body id="body" style="margin: 0 2%;">
     <div style="display: none;">
     <a-scene id="ascene" embedded>
     <script src="https://firer.at/scripts/firescreen.js" mipmaps="0" pixelsperunit="1400"
@@ -112,10 +112,11 @@
     </script>
     </a-scene>
     </div>
-    <center><h3>Send a Message</h3>
+    <center><div><b>Send a Message</b></div>
     <input class="url-form url-thing" type="text" id="messageBox" placeholder="Enter your message here" />
     <button class="url-thing" onclick="sendMessage()">Submit</button></center>
     <hr><span><b>Chat Messages:</b></span><br/>
     <div id="keyboardtest" style="height: 400px; white-space: pre-wrap; overflow-y: auto;"></div><br/>
+    <center><span style="font-size: 20px;">Messages sent or received are temporary and will be gone when you rejoin</span></center>
   </body>
 </html>
