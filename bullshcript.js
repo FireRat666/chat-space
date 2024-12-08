@@ -66,8 +66,9 @@ if(window.isBanter){
       setTimeout(async () => {
         drawToolGameObjectTransform.position = new BS.Vector3(4,1.3,-2);
         drawToolGameObjectTransform.eulerAngles = new BS.Vector3(0,-90,0);
+        console.log("Kit item loaded successfully!");
       }, 500);
-    }, 1000);
+    }, 2000);
   };
 
   somerandomStartCrap();
