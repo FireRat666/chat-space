@@ -57,7 +57,7 @@ if(window.isBanter){
     const kitDrawWindows = "https://chat-space.firer.at/DrawTools/kitbundle_standalonewindows.banter";
     const kitDrawAndroid = "https://chat-space.firer.at/DrawTools/kitbundle_android.banter";
     const drawToolsObject = await new BS.GameObject("MyDrawTools");
-    const kitDrawBundle = await drawToolsObject.AddComponent(new BS.BanterAssetBundle(kitDrawWindows, null, null, kitDrawAndroid));
+    const kitDrawBundle = await drawToolsObject.AddComponent(new BS.BanterAssetBundle(kitDrawWindows, null, null, kitDrawAndroid, null, null, false));
     setTimeout(async () => {
       const drawToolItemPath = "assets/_prefabs/drawgadget/drawtool.prefab";
       const drawToolGameObject = await new BS.GameObject("MyKitItem");
