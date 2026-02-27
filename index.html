@@ -33,14 +33,14 @@
                     // This logic runs inside the Banter space's main browser (this page)
                     await new Promise(resolve => setTimeout(resolve, 3000)); // Allow time for firescreens to init
 
-                    document.querySelectorAll('.firescreenc').forEach((element) => {
-                        element.addEventListener('browsermessage', (e) => {
-                            console.log("Received message from legacy firescreen:", e.detail);
-                            BS.BanterScene.GetInstance().OneShot(
-                                JSON.stringify({ browsermessagething: BS.BanterScene.GetInstance().localUser.name + ": " + e.detail })
-                            );
-                        });
-                    });
+                    // document.querySelectorAll('.firescreenc').forEach((element) => {
+                    //     element.addEventListener('browsermessage', (e) => {
+                    //         console.log("Received message from legacy firescreen:", e.detail);
+                    //         BS.BanterScene.GetInstance().OneShot(
+                    //             JSON.stringify({ browsermessagething: BS.BanterScene.GetInstance().localUser.name + ": " + e.detail })
+                    //         );
+                    //     });
+                    // });
 
                     try {
                         let firebrowserthing = await BS.BanterScene.GetInstance().Find(`MyBrowser1`);
