@@ -72,13 +72,6 @@
                 });
 
                 async function browsermessageStuff(messageData) {
-                    // Forward to legacy firescreen
-                    document.querySelectorAll('.firescreenc').forEach(element => {
-                        if (element.components["sq-browser"]) {
-                            element.components["sq-browser"].runActions([{ actionType: "postmessage", strparam1: messageData }]);
-                        }
-                    });
-
                     // Forward to firescreenv2
                     try {
                         let firebrowserthing = await BS.BanterScene.GetInstance().Find(`MyBrowser1`);
@@ -156,8 +149,8 @@
         } else {
             window.addEventListener("unity-loaded", initializePage);
             window.addEventListener("bs-loaded", initializePage);
-            // Fallback for standard browser after a short delay
-            setTimeout(() => initializePage(), 500);
+            // Fallback for standard browser after a delay
+            setTimeout(() => initializePage(), 8000);
         }
     </script>
 </head>
