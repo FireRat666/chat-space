@@ -1,164 +1,184 @@
 <!DOCTYPE html>
 <html android-bundle="https://chat-space.firer.at/android.banter" windows-bundle="https://chat-space.firer.at/windows.banter">
-	<head>    
-		<meta charset="UTF-8" />
-		<link id="favicon" rel="icon" href="https://firer.at/files/favicon.ico" type="image/x-icon" />
-		<meta name="color-scheme" content="dark">
-		<meta property="og:title" content="Silent Chat Space">
-		<meta property="og:description" content="FireR.at's Website/Space for communication">
-		<meta property="og:image" content="https://cdn.sidequestvr.com/file/1345509/dalle-2024-11-17-124101-a-stylized-fire-rat-fully-made-of-flames-designed-in-a-colored-pencil-art-style-on-textured-paper-the-flames-flow-seamlessly-across-the-rats-form.jpg">
-		<title>FireR.at's Website/Space</title>
-		<link rel="stylesheet" href="https://firer.at/pages/style.css" />
-		<script src="https://firer.at/scripts/RandomBG.js"></script>
-		<script src="https://chat-space.firer.at/bullshcript.js"></script> <!-- bullshcript bullshtest -->
-		<script src="https://firer.at/scripts/keyboard.js"></script>
-		<script src="https://firer.at/scripts/announcer.js" announce="true" announce-420="false" announce-events="true"></script>
-		<script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
-		<!-- Analytics and Cookie Stuff Start -->
-		<script>
-      if(window.isBanter) { console.log("index.html Window is Banter, Not adding cookie chimp scripts");
-      } else {
-          console.log("Adding Cookie Chimp Script")
-          const cookiechimpscript = document.createElement("script");
-          cookiechimpscript.id = "cookiechimpscript";
-          cookiechimpscript.setAttribute("src", "https://cookiechimp.com/widget/mV3trJ.js");
-          document.querySelector("head").appendChild(cookiechimpscript); };
-    </script>
-		<script type="text/plain" data-src="https://www.googletagmanager.com/gtag/js?id=G-HSMS8JERQ2"
-		  data-category="analytics" data-service="Google Analytics" ></script>
-		<script type="text/plain" data-category="analytics" data-service="Google Analytics" >
-		  window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);}
-		  gtag('js', new Date()); gtag('config', 'G-HSMS8JERQ2'); </script>
-		<!-- Analytics and Cookie Stuff END -->
-    <script>
-      // Thank You HBR for the example for this
-      if(!window.isBanter) {
-        window.addEventListener("bantermessage", (e) => {
-          let chatdivider = document.getElementById("keyboardtest");
-          chatdivider.appendChild(document.createTextNode(e.detail.message));
-          chatdivider.appendChild(document.createElement("br"));
-          chatdivider.scrollTop = chatdivider.scrollHeight;
-        });
+<head>
+    <meta charset="UTF-8" />
+    <link id="favicon" rel="icon" href="https://firer.at/files/favicon.ico" type="image/x-icon" />
+    <meta name="color-scheme" content="dark">
+    <meta property="og:title" content="Silent Chat Space">
+    <meta property="og:description" content="FireR.at's Website/Space for communication">
+    <meta property="og:image" content="https://cdn.sidequestvr.com/file/1345509/dalle-2024-11-17-124101-a-stylized-fire-rat-fully-made-of-flames-designed-in-a-colored-pencil-art-style-on-textured-paper-the-flames-flow-seamlessly-across-the-rats-form.jpg">
+    <title>FireR.at's Website/Space</title>
+    <link rel="stylesheet" href="https://firer.at/pages/style.css" />
+    <script src="https://firer.at/scripts/RandomBG.js"></script>
+    <script src="https://chat-space.firer.at/bullshcript.js"></script>
+    <script src="https://firer.at/scripts/keyboard.js"></script>
+    <script src="https://firer.at/scripts/announcer.js" announce="true" announce-420="false" announce-events="true"></script>
 
-        function sendMessage() {
-          const message = document.getElementById('messageBox').value;
-          if (message.trim() !== "") {
-            window.bantermessage(message);
-            console.log("Message sent to the space:", message);
-            document.getElementById('messageBox').value = "";
-          } else { console.log("Empty message not sent."); }
+    <script>
+        let initialized = false;
+
+        function initializePage() {
+            if (initialized) return;
+            initialized = true;
+
+            const isBanterEnvironment = !!window.BS || !!window.isBanter;
+            console.log("Initializing page, isBanterEnvironment:", isBanterEnvironment);
+
+            if (isBanterEnvironment) {
+                // --- BANTER-SPECIFIC LOGIC ---
+                console.log("index.html: Running in Banter environment.");
+
+                // Setup listeners for communication from the browser screens within the space
+                (async () => {
+                    // This logic runs inside the Banter space's main browser (this page)
+                    await new Promise(resolve => setTimeout(resolve, 3000)); // Allow time for firescreens to init
+
+                    document.querySelectorAll('.firescreenc').forEach((element) => {
+                        element.addEventListener('browsermessage', (e) => {
+                            console.log("Received message from legacy firescreen:", e.detail);
+                            BS.BanterScene.GetInstance().OneShot(
+                                JSON.stringify({ browsermessagething: BS.BanterScene.GetInstance().localUser.name + ": " + e.detail })
+                            );
+                        });
+                    });
+
+                    try {
+                        let firebrowserthing = await BS.BanterScene.GetInstance().Find(`MyBrowser1`);
+                        if (firebrowserthing) {
+                            firebrowserthing.On("browser-message", (e) => {
+                                console.log("Received message from firescreenv2:", e.detail);
+                                BS.BanterScene.GetInstance().OneShot(
+                                    JSON.stringify({ browsermessagething: BS.BanterScene.GetInstance().localUser.name + ": " + e.detail })
+                                );
+                            });
+                        }
+                    } catch (error) {
+                        console.error("Could not find or attach to MyBrowser1:", error);
+                    }
+                })();
+
+                // Listen for messages from other users or the space itself
+                BS.BanterScene.GetInstance().On("one-shot", async e => {
+                    try {
+                        const data = JSON.parse(e.detail.data);
+                        const message = data.browsermessagething || data.messagething;
+                        if (message) {
+                            console.log("Forwarding message to embedded browsers:", message);
+                            browsermessageStuff(message);
+                        }
+                    } catch (err) {
+                        // Ignore errors from non-JSON one-shots
+                    }
+                });
+
+                async function browsermessageStuff(messageData) {
+                    // Forward to legacy firescreen
+                    document.querySelectorAll('.firescreenc').forEach(element => {
+                        if (element.components["sq-browser"]) {
+                            element.components["sq-browser"].runActions([{ actionType: "postmessage", strparam1: messageData }]);
+                        }
+                    });
+
+                    // Forward to firescreenv2
+                    try {
+                        let firebrowserthing = await BS.BanterScene.GetInstance().Find(`MyBrowser1`);
+                        if (firebrowserthing) {
+                            let thisfirebrowser = firebrowserthing.GetComponent(BS.ComponentType.BanterBrowser);
+                            if (thisfirebrowser) {
+                                thisfirebrowser.RunActions(JSON.stringify({"actions": [{ "actionType": "postmessage","strparam1": messageData }]}));
+                            }
+                        }
+                    } catch (error) {
+                        console.error("Could not forward message to MyBrowser1:", error);
+                    }
+                }
+
+            } else {
+                // --- STANDARD BROWSER LOGIC ---
+                console.log("index.html: Running in standard browser. Adding Cookie Chimp and setting up chat.");
+
+                // Add Cookie Chimp
+                const cookiechimpscript = document.createElement("script");
+                cookiechimpscript.id = "cookiechimpscript";
+                cookiechimpscript.setAttribute("src", "https://cookiechimp.com/widget/mV3trJ.js");
+                document.head.appendChild(cookiechimpscript);
+
+                // Analytics scripts
+                document.querySelectorAll('script[type="text/plain"]').forEach(script => {
+                    const newScript = document.createElement('script');
+                    if (script.dataset.src) {
+                        newScript.src = script.dataset.src;
+                    } else {
+                        newScript.textContent = script.textContent;
+                    }
+                    document.head.appendChild(newScript);
+                });
+
+                // Listen for messages from the Banter space
+                window.addEventListener("bantermessage", (e) => {
+                    let chatdivider = document.getElementById("keyboardtest");
+                    chatdivider.appendChild(document.createTextNode(e.detail.message));
+                    chatdivider.appendChild(document.createElement("br"));
+                    chatdivider.scrollTop = chatdivider.scrollHeight;
+                });
+
+                // Add event listener for the message box
+                const messageBox = document.getElementById('messageBox');
+                if (messageBox) {
+                    messageBox.addEventListener('keydown', (event) => {
+                        if (event.key === 'Enter') { sendMessage(); }
+                    });
+                }
+            }
         }
-        setTimeout(() => { 
-          // Add an event listener to handle pressing Enter
-          const messageBox = document.getElementById('messageBox');
-          messageBox.addEventListener('keydown', (event) => {
-              if (event.key === 'Enter') { sendMessage(); }
-          });
-         }, 2000);
-      }
+
+        // This function is now globally available for the onclick attribute
+        function sendMessage() {
+            const messageBox = document.getElementById('messageBox');
+            const message = messageBox.value;
+            if (message.trim() !== "") {
+                // window.bantermessage is defined by the Banter browser environment
+                if (window.bantermessage) {
+                    window.bantermessage(message);
+                    console.log("Message sent to the space:", message);
+                } else {
+                    console.log("Not in Banter browser, message not sent:", message);
+                }
+                messageBox.value = "";
+            } else {
+                console.log("Empty message not sent.");
+            }
+        }
+
+        // --- Wait for the Banter environment to be ready ---
+        if (window.BS) {
+            initializePage();
+        } else {
+            window.addEventListener("unity-loaded", initializePage);
+            window.addEventListener("bs-loaded", initializePage);
+            // Fallback for standard browser after a short delay
+            setTimeout(() => initializePage(), 500);
+        }
     </script>
 </head>
-	<body id="body" style="margin: 0 2%;">
-    <div style="display: none;">
+<body id="body" style="margin: 0 2%;">
+<div style="display: none;">
     <a-scene id="ascene" embedded>
-    <script src="https://firer.at/scripts/firescreen.js" mipmaps="0" pixelsperunit="1400"
-            website="https://chat-space.firer.at/?31"
-            position="3 1.7 -2" rotation="0 90 0" scale="1 1 1" volumelevel="0.5" announce="true">
-    </script>
-    <script src="https://firer.at/scripts/firescreenv2.js" mipmaps="0" pixelsperunit="1300"
-            website="https://chat-space.firer.at/?31" width="1280" height="720" hand-controls="true"
-            position="-3 1.7 2" rotation="0 0 0" scale="1 1 1" volumelevel="0.5" announce="true">
-    </script>
-    <script>
-      if(window.isBanter) { 
-        function waitForUnityLoaded(pollInterval = 1000) {
-          return new Promise((resolve) => {
-            const checkLoaded = () => {
-              if (BS.BanterScene.GetInstance().unityLoaded) {
-                resolve();
-              } else {
-                setTimeout(checkLoaded, pollInterval);
-              }
-            };
-            checkLoaded();
-          });
-        }
-
-        let firescreenolder = null;
-
-        (async () => {
-          await waitForUnityLoaded();
-          await new Promise((resolve) => setTimeout(resolve, 3000));
-          document.querySelectorAll('.firescreenc').forEach((element) => {
-            firescreenolder = element;
-            element.addEventListener('browsermessage', (e) => {
-              console.log("Received message from the webpage:", e.detail);
-              BS.BanterScene.GetInstance().OneShot(
-                JSON.stringify({
-                  browsermessagething:
-                    BS.BanterScene.GetInstance().localUser.name + ": " + e.detail,
-                })
-              );
-            });
-          });
-          let firebrowserthing = await BS.BanterScene.GetInstance().Find(`MyBrowser1`);
-          firebrowserthing.On("browser-message", (e) => {
-            console.log("Received message from the webpage:", e.detail);
-            BS.BanterScene.GetInstance().OneShot(
-              JSON.stringify({
-                browsermessagething:
-                  BS.BanterScene.GetInstance().localUser.name + ": " + e.detail,
-              })
-            );
-          });
-        })();
-
-        // let firescreenolder = null;
-        // let thiswaitingforunity = true; var delaythinginterval;
-        // if (thiswaitingforunity) { 
-        //   delaythinginterval = setInterval(function() {
-        //     if (BS.BanterScene.GetInstance().unityLoaded) { 
-        //       thiswaitingforunity = false; clearInterval(delaythinginterval); 
-        //       setTimeout(async () => {
-        //         document.querySelectorAll('.firescreenc').forEach((element, index) => {
-        //           firescreenolder = element;
-        //           element.addEventListener('browsermessage', (e) => {
-        //             console.log("Received message from the webpage:", e.detail);
-        //             BS.BanterScene.GetInstance().OneShot(JSON.stringify({browsermessagething: BS.BanterScene.GetInstance().localUser.name + ": " + e.detail}));
-        //           });
-        //         });
-        //         let firebrowserthing = await BS.BanterScene.GetInstance().Find(`MyBrowser1`);
-        //         firebrowserthing.On("browser-message", (e) => {
-        //           console.log("Received message from the webpage:", e.detail);
-        //           BS.BanterScene.GetInstance().OneShot(JSON.stringify({browsermessagething: BS.BanterScene.GetInstance().localUser.name + ": " + e.detail}));
-        //         });
-        //       }, 3000);
-        //     };
-        //   }, 1000); 
-        // };
-
-        BS.BanterScene.GetInstance().On("one-shot", async e => {
-          const data = JSON.parse(e.detail.data);
-            if (data.browsermessagething) { console.log(data.browsermessagething); browsermessageStuff(data.browsermessagething); };
-            if (data.messagething) { console.log(data.messagething); browsermessageStuff(data.messagething); };
-        });
-
-        async function browsermessageStuff(messageData) {
-          if (firescreenolder) { firescreenolder.components["sq-browser"].runActions([{ actionType: "postmessage", strparam1: messageData }]); }
-          let firebrowserthing = await BS.BanterScene.GetInstance().Find(`MyBrowser1`);
-          let thisfirebrowser = firebrowserthing.GetComponent(BS.ComponentType.BanterBrowser);
-          thisfirebrowser.RunActions(JSON.stringify({"actions": [{ "actionType": "postmessage","strparam1": messageData }]}));
-        };
-        
-      }
-    </script>
+        <script src="https://firer.at/scripts/firescreen.js" mipmaps="0" pixelsperunit="1400"
+                website="https://chat-space.firer.at/?31"
+                position="3 1.7 -2" rotation="0 90 0" scale="1 1 1" volumelevel="0.5" announce="true">
+        </script>
+        <script src="https://firer.at/scripts/firescreenv2.js" mipmaps="0" pixelsperunit="1300"
+                website="https://chat-space.firer.at/?31" width="1280" height="720" hand-controls="true"
+                position="-3 1.7 2" rotation="0 0 0" scale="1 1 1" volumelevel="0.5" announce="true">
+        </script>
     </a-scene>
-    </div>
-    <center><div><b>Send a Message</b></div>
+</div>
+<center><div><b>Send a Message</b></div>
     <input class="url-form url-thing" type="text" id="messageBox" placeholder="Enter your message here" />
     <button class="url-thing" onclick="sendMessage()">Submit</button></center>
-    <hr><span><b>Chat Messages:</b></span><br/>
-    <div id="keyboardtest" style="height: 400px; white-space: pre-wrap; overflow-y: auto;"></div><br/>
-    <center><span style="font-size: 20px;">Messages sent or received are temporary and will be gone when you rejoin</span></center>
-  </body>
+<hr><span><b>Chat Messages:</b></span><br/>
+<div id="keyboardtest" style="height: 400px; white-space: pre-wrap; overflow-y: auto;"></div><br/>
+<center><span style="font-size: 20px;">Messages sent or received are temporary and will be gone when you rejoin</span></center>
+</body>
 </html>
