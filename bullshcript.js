@@ -43,7 +43,7 @@
             const textObject = new BS.GameObject("InfoText");
             const infoText = await textObject.AddComponent(new BS.BanterText("Messages will appear on the browser", new BS.Vector4(1, 1, 1, 1)));
             const textTransform = await textObject.AddComponent(new BS.Transform());
-            textTransform.position = new BS.Vector3(8, 1, 5);
+            textTransform.position = new BS.Vector3(0, 1, 5);
             // textTransform.localPosition = new BS.Vector3(8.1, -1, 0); infoText.text = "label";
         }
 
